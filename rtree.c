@@ -123,7 +123,7 @@ void mergeSort(int** A, int st, int en, int sortOnInd) {
 }
 
 // ************************************************************************************
-
+// DO NOT CHANGE ABOVE THIS LINE PLSSS
 
 // rtree* build(int ** pointList,int size){
 //     sort_x();
@@ -145,17 +145,32 @@ void mergeSort(int** A, int st, int en, int sortOnInd) {
 //     build(new_list,num_nodes);
 // }
 
+/*
+TODO: Make connections between node->parent and node
+suggestion from monis: convert node*** into rtree**, each rtree* pointing to a particular subtree
+bohot easily ho jaega and your main build() will get simplified
+*/
 node*** buildAux(int** MBR, node*** nodeList, int numberOfMBRs, int curLevel){
+
+    // sort by x
     mergeSort(MBR, 0, numberOfMBRs - 1, 0);
     int numberOfNodes = ceil(numberOfMBRs / (float)m);
     int nodesInSlice = ceil(sqrt(numberOfMBRs * m));
     int numberOfSlices = ceil(sqrt(numberOfMBRs / (float)m));
+
+    // sort by y
     for(int i = 0; i < numberOfSlices; i++) {
         mergeSort(MBR, i * nodesInSlice, min((i + 1) * nodesInSlice, numberOfMBRs) - 1, 1);
     }
 
+    // list of all nodes to be populated in current level
     nodeList[curLevel] = (node**)malloc(sizeof(node*) * numberOfNodes);
+
+    // list of MBRs for the next recursion level
     int** newMBR = (int**)malloc(sizeof(int*) * numberOfNodes);
+
+    // does two things, one is populating nodes, and calculating next level MBRs
+    // i % m == 0, i.e. 0, m, 2*m, are the indices at which new node/MBR is created cuz we want groups of m
     for(int i = 0; i < numberOfMBRs; i++) {
         if(i % m == 0) {
             nodeList[curLevel][i / m] = new_node();
@@ -169,20 +184,26 @@ node*** buildAux(int** MBR, node*** nodeList, int numberOfMBRs, int curLevel){
         nodeList[curLevel][i / m]->cnt_keys++;
     }
 
+    // freeing up memory of previous mbr
     for(int i = 0; i < numberOfMBRs; i++) 
         free(MBR[i]);
     free(MBR);
 
+    // base recursion case, jab no. of nodes is 1 make sure it recurses once so that root is formed (like a do while loop)
     if(numberOfNodes == 1) return nodeList;
     return buildAux(newMBR, nodeList, numberOfNodes, curLevel + 1);
 }
 
 rtree* build(int** MBR, int numberOfMBRs) {
     rtree* t = new_tree();
+    // check
     int numberOfLevels = ceil(log10(numberOfMBRs)/log10(m));
+
+    // change karlo ye plsss
     node*** nodeList = (node***)malloc(sizeof(node**) * numberOfLevels);
     nodeList = buildAux(MBR, nodeList, numberOfMBRs, 0);
 
+    // printing statements -> bohot kharaab needs to be modified
     for(int i = 0; i < numberOfLevels; i++) {
         printf("Level #%d:\n", i);
         int comp = ceil(numberOfMBRs/(float)m);
