@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <math.h>
+#include <time.h>
 
 #define m 2                          /* Minimum children */
 #define M 4                          /* Maximum children */
@@ -248,7 +249,7 @@ rtree** buildSTR(rtree** curLevel, int numberOfMBRs, int levelNumber){
 
 int main() {
     // Initialises file pointer.
-    FILE* f = fopen("data.txt", "r");
+    FILE* f = fopen("large.txt", "r");
     int listSize = 10;
 
     // Initial list of rtree* that would store the input, in the root of every tree.
@@ -282,10 +283,15 @@ int main() {
     // Closes file pointer.
     fclose(f);
 
+    double startTime = (float)clock()/CLOCKS_PER_SEC;
+
     // Calls sort-tile-recursive build function which returns a pointer to the tree.
     rtree** pointerToTree = buildSTR(pointList, inputSize, 0);
     rtree* finalTree = pointerToTree[0];
     free(pointerToTree);
+
+    double endTime = (float)clock()/CLOCKS_PER_SEC;
+    printf("Execution time of buildSTR(): %lf", endTime - startTime);
 
     // Runs a pre-order traversal of the tree.
     dfs(finalTree->root, 0);
