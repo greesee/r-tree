@@ -149,10 +149,12 @@ void dfs(node* curNode, int level) {
 
     // Prints the MBR of the entire root node (all its children).
     if(level == 0) {
-        printf("\nMBR of Root Node: ");
+        printf("\nMBR of Root Node: [");
         for(int i = 0; i < 4; i++) {
-            printf("%d ", curNode->nodeMBR[i]);
+            printf("%d", curNode->nodeMBR[i]);
+            if(i != 3) printf(", ");
         }
+        printf("]");
     }
 
     // For each call, prints the DFS depth as well as all children associated with the current node.
