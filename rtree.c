@@ -242,7 +242,7 @@ rtree** buildSTR(rtree** curLevel, int numberOfMBRs, int levelNumber){
 }
 
 // ************************************************************************************
-//                          MAIN FUNCTION
+//                              MAIN FUNCTION
 
 int main() {
     // Initialises file pointer.
