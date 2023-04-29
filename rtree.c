@@ -241,6 +241,9 @@ rtree** buildSTR(rtree** curLevel, int numberOfMBRs, int levelNumber){
     return buildSTR(nextLevel, numberOfNodes, levelNumber + 1);
 }
 
+// ************************************************************************************
+//                          MAIN FUNCTION
+
 int main() {
     // Initialises file pointer.
     FILE* f = fopen("data.txt", "r");
