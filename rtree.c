@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <math.h>
-#include <time.h>
+// #include <time.h>
 
 #define m 2                          /* Minimum children */
 #define M 4                          /* Maximum children */
@@ -46,10 +46,10 @@ node* new_node(){
         }
         n->children[i] = NULL;
     }
-    n->nodeMBR[0] = INF;
-    n->nodeMBR[1] = INF;
-    n->nodeMBR[2] = -INF;
-    n->nodeMBR[3] = -INF;
+    for(int i = 0; i < 2; i++) {
+        n->nodeMBR[i] = INF;
+        n->nodeMBR[i + 2] = -INF;
+    }
     n->parent = NULL;
     n->cnt_keys = 0;
     return n;
@@ -164,10 +164,12 @@ void dfs(node* curNode, int level) {
         printf("[");
         for(int j = 0; j < 4; j++) {
             printf("%d", curNode->MBR[i][j]);
-            if(j != 3) printf(", ");
+            if(j != 3) 
+                printf(", ");
         }
         printf("]");
-        if(i != curNode->cnt_keys - 1) printf(", ");
+        if(i != curNode->cnt_keys - 1) 
+            printf(", ");
     }
 
     // Recursive DFS call to visit children of the current node.
@@ -183,7 +185,7 @@ void dfs(node* curNode, int level) {
 /*  Implementation of Sort-Tile-Recursive algorithm that efficiently bulk-loads data into the RTree.
     Time complexity = O(N * (log(N))^2), N is the number of points/objects.
 */
-rtree** buildSTR(rtree** curLevel, int numberOfMBRs, int levelNumber){
+rtree** buildSTR(rtree** curLevel, int numberOfMBRs, int levelNumber) {
 
     // Calculations for number of slices required, number of nodes in each slice, and total number of nodes in current level.
     int numberOfSlices = ceil(sqrt(numberOfMBRs / (float)M));
@@ -206,6 +208,7 @@ rtree** buildSTR(rtree** curLevel, int numberOfMBRs, int levelNumber){
         Also populates the nodeMBRs for the nextLevel, using these children's MBRs.
         Uses modular arithmetic to simplify the code.
     */
+   // 0 1 2 3 4 5 6
     for(int i = 0; i < numberOfMBRs; i++) {
         if(i % M == 0) {
             nextLevel[i / M] = new_tree();
@@ -247,9 +250,9 @@ rtree** buildSTR(rtree** curLevel, int numberOfMBRs, int levelNumber){
 // ************************************************************************************
 //                              MAIN FUNCTION
 
-int main() {
+int main(int argc, char *argv[]) {
     // Initialises file pointer.
-    FILE* f = fopen("large.txt", "r");
+    FILE* f = fopen(argv[1], "r");
     int listSize = 10;
 
     // Initial list of rtree* that would store the input, in the root of every tree.
@@ -265,7 +268,7 @@ int main() {
         // Every time the size of input reaches the list size limit, we reallocate the list with double the memory.
         // Since this reallocation would be done approximately ceil(log(N)) times, N is input size, there is no efficiency loss.
         // Similar to "vector" in vector.h library of cpp.
-        if(inputSize >= listSize) {
+        if(inputSize >= listSize && inputSize) {
             listSize *= 2;
             pointList = realloc(pointList, sizeof(rtree*) * listSize);
         }
@@ -274,26 +277,26 @@ int main() {
         pointList[inputSize] = new_tree();
         pointList[inputSize]->root = new_node();
 
-        fscanf(f, "%d %d", &pointList[inputSize]->root->nodeMBR[0], &pointList[inputSize]->root->nodeMBR[1]);
+        fscanf(f, "%d %d\n", &pointList[inputSize]->root->nodeMBR[0], &pointList[inputSize]->root->nodeMBR[1]);
         pointList[inputSize]->root->nodeMBR[2] = pointList[inputSize]->root->nodeMBR[0];
         pointList[inputSize]->root->nodeMBR[3] = pointList[inputSize]->root->nodeMBR[1];
         ++inputSize;
     }
-
     // Closes file pointer.
     fclose(f);
 
-    double startTime = (float)clock()/CLOCKS_PER_SEC;
+    // double startTime = (float)clock()/CLOCKS_PER_SEC;
 
     // Calls sort-tile-recursive build function which returns a pointer to the tree.
     rtree** pointerToTree = buildSTR(pointList, inputSize, 0);
     rtree* finalTree = pointerToTree[0];
     free(pointerToTree);
 
-    double endTime = (float)clock()/CLOCKS_PER_SEC;
-    printf("Execution time of buildSTR(): %lf", endTime - startTime);
+    // double endTime = (float)clock()/CLOCKS_PER_SEC;
+    // printf("\nExecution time of buildSTR(): %lf", endTime - startTime);
 
     // Runs a pre-order traversal of the tree.
     dfs(finalTree->root, 0);
+    printf("\n");
     return 0;
 }
