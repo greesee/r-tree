@@ -18,8 +18,7 @@ python visualize.py #Enter the name of the CSV file after this
 
 ### Results
 * For data.txt (21 data points):
-![](https://github.com/greesee/r-tree/blob/master/Figure_2.png?raw=true)
-
+![](https://github.com/greesee/r-tree/blob/master/results/Figure_2.png?raw=True)
 
 * For large.txt (150000 data points):
-![](https://github.com/greesee/r-tree/blob/master/Figure_1.png?raw=true)
+![](https://github.com/greesee/r-tree/blob/master/results/Figure_1.png?raw=True)
