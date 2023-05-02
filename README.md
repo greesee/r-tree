@@ -6,21 +6,22 @@ This program implements the sort-tile-recursive (STR) bulk loading technique tha
 This program accepts dataset file as an argument. To pass the file, first compile the code, and pass it as an additional argument while executing the binary.
 
 ```
-gcc -o rtree rtree.c #compiling the binary
-./rtree data.txt #assuming that the file is named data.txt
+gcc -o rtree rtree.c    # compiling the binary
+./rtree data.txt        # assuming that the file is named data.txt
 ```
 ### Visualization
 Visualization requires formatted input in the form of a CSV file (4 columns, in the order `minx, miny, maxx, maxy`). Store the CSV file in the same folder as the python file. This can then be simply run by:
 
 ```
-python visualize.py #Enter the name of the CSV file after this
+python visualize.py     # Enter the name of the CSV file after this
 ```
 
 ### Results
+* For `large.txt` (150000 data points):
+
+![](https://github.com/greesee/r-tree/blob/master/results/Figure_1.png?raw=True)
+
 * For `data.txt` (21 data points):
 
 ![](https://github.com/greesee/r-tree/blob/master/results/Figure_2.png?raw=True)
 
-* For `large.txt` (150000 data points):
-
-![](https://github.com/greesee/r-tree/blob/master/results/Figure_1.png?raw=True)
